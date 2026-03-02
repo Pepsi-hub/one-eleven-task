@@ -1,0 +1,68 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Eleven Task Validator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">API Validator</h2>
+        
+        <form id="validatorForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" id="email" required placeholder="your@email.com"
+                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-red-500 focus:border-red-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Your API Endpoint URL</label>
+                <input type="url" id="apiUrl" required placeholder="https://your-api.com/webhook"
+                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-red-500 focus:border-red-500">
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-200">
+                Test My API
+            </button>
+        </form>
+
+        <div id="responseContainer" class="mt-6 hidden">
+            <h3 class="text-sm font-semibold text-gray-600 uppercase">Validation Response:</h3>
+            <pre id="responseOutput" class="mt-2 p-4 bg-gray-900 text-green-400 rounded-md overflow-x-auto text-sm"></pre>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('validatorForm');
+        const container = document.getElementById('responseContainer');
+        const output = document.getElementById('responseOutput');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const url = document.getElementById('apiUrl').value;
+            
+            // Construct the validation URL as specified in the task [cite: 19]
+            const validationUrl = `https://yhxzjyykdsfkdrmdxgho.supabase.co/functions/v1/application-task?url=${encodeURIComponent(url)}&email=${encodeURIComponent(email)}`;
+
+            try {
+                const response = await fetch(validationUrl);
+                const data = await response.json();
+                
+                container.classList.remove('hidden');
+                output.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                container.classList.remove('hidden');
+                output.textContent = "Error connecting to validation server.";
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
