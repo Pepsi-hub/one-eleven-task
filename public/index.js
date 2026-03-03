@@ -26,4 +26,4 @@ app.post('/webhook', (req, res)=>{
     return res.json({word: sortedArray});
 });
 
-app.listen(port, () => console.log('Server running on port &{port}'));
+app.listen(port, () => console.log('Server running on port ${port}'));
